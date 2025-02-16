@@ -1,8 +1,8 @@
-package com.softwareforpeople.lmplayer.ui.navigation
+package com.softwareforpeople.lmplayer.ui
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun buttomNavigation() {
+fun ButtomNavigation() {
 
 }
