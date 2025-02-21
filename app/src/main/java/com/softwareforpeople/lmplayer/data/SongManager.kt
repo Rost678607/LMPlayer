@@ -31,6 +31,7 @@ class SongManager(private val context: Context) {
         sharedPreferences.edit().putString(songListKey, json).apply()
     }
 
+
     // добавление трека
     fun addSong(song: Song) {
         val songs = loadSongs().toMutableList()
@@ -70,5 +71,15 @@ class SongManager(private val context: Context) {
         } else {
             songs.maxOf { it.ID } + 1U
         }
+    }
+
+    // добавления треков в плейлист
+    fun addTrackToPlaylist(playlist: Playlist, track: Track): Playlist {
+        return playlist.copy(tracks = playlist.tracks + track)
+    }
+
+    // удаление трека из плейлиста
+    fun removeTrackFromPlaylist(playlist: Playlist, track: Track): Playlist {
+        return playlist.copy(tracks = playlist.tracks - track)
     }
 }
