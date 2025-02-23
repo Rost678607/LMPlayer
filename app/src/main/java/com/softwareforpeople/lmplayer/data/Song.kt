@@ -11,3 +11,14 @@ data class Song(
     var Rating: UByte = 60U,
     var Speed: Float = 1.0F
 )
+
+data class Playlist(
+    val name: String,
+    val tracks: List<Track>
+)
+
+data class Track(
+    val title: String,
+    val artist: String,
+    val uri: String
+)
