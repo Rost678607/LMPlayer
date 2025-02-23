@@ -7,10 +7,9 @@ import androidx.compose.ui.input.key.type
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SongManager(private val context: Context) {
+class SongManager(context: Context) {
 
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("SongData", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("SongData", Context.MODE_PRIVATE)
     private val gson = Gson()
     private val songListKey = "songList"
 
@@ -45,7 +44,6 @@ class SongManager(private val context: Context) {
         val songs = loadSongs().toMutableList()
         songs.removeAll { it.ID == songId }
         recalculateIds(songs)
-
         saveSongs(songs)
     }
 
