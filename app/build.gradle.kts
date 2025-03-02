@@ -56,6 +56,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.gson)
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 }

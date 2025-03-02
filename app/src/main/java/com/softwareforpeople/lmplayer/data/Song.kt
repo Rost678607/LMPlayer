@@ -8,7 +8,7 @@ data class Song(
     var Author: String = "Unknown",
     var URI: Uri,
     val Duration: UInt,
-    var Rating: UByte = 60U,
+    var Rating: Byte = 90,                   //  0-100
     var Speed: Float = 1.0F
 )
 

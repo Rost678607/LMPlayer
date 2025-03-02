@@ -5,10 +5,11 @@ import android.media.MediaPlayer
 import android.net.Uri
 import com.softwareforpeople.lmplayer.data.SongManager
 
-class Player(private val context: Context, songID: UInt) {
+class Player(val context: Context) {
     private val mp = MediaPlayer()
-    var currentSongID: UInt = 0U
     private val songManager = SongManager(context)
+
+    private var currentSongID: UInt = 0U
 
     // Получение Uri песни по ID
     fun getUriByID(songID: UInt): Uri? {
