@@ -1,13 +1,9 @@
 package com.softwareforpeople.lmplayer.model.play
 
 import kotlin.random.Random
-import android.content.Context
 import com.softwareforpeople.lmplayer.data.Song
-import com.softwareforpeople.lmplayer.model.play.Player
 
-class SongQueueManager(val context: Context, val songs: MutableList<Song>) {
-    private val player = Player(context)
-
+class SongQueue(val songs: List<Song>) {
     private var queue: MutableList<UInt> = mutableListOf() // список ID песен в очереди
     private var currentSongIndex: Int = 0 // индекс текущего трека
 
@@ -23,7 +19,7 @@ class SongQueueManager(val context: Context, val songs: MutableList<Song>) {
 
     // продливание очереди
     private fun continueQueue(useRatings: Boolean) {
-        var finalContinuation: MutableList<UInt> = mutableListOf()
+        val finalContinuation: MutableList<UInt> = mutableListOf()
 
         if(useRatings) {
             for (song in songs) {
@@ -59,6 +55,10 @@ class SongQueueManager(val context: Context, val songs: MutableList<Song>) {
         }
     }
 
+    fun deleteSong(songID: UInt) {
+        queue.remove(songID)
+    }
+
     // добавление следующего элемента
     fun addNextSong(songID: UInt) {
         queue.add(currentSongIndex + 1, songID)
@@ -68,5 +68,20 @@ class SongQueueManager(val context: Context, val songs: MutableList<Song>) {
     // текущий элемент
     fun getCurrentSongID(): UInt {
         return queue[currentSongIndex]
+    }
+
+    fun goNextSong() {
+        if(currentSongIndex < queue.size - 1) {
+            currentSongIndex++
+        } else {
+            makeQueue(true)
+            currentSongIndex = 0
+        }
+    }
+
+    fun goPrevSong() {
+        if(currentSongIndex > 0) {
+            currentSongIndex--
+        }
     }
 }

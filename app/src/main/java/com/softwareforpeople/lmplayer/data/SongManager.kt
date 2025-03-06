@@ -2,6 +2,7 @@ package com.softwareforpeople.lmplayer.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -49,6 +50,10 @@ class SongManager(context: Context) {
     fun getSongById(songId: UInt): Song? {
         val songs = loadSongs()
         return songs.find { it.ID == songId }
+    }
+
+    fun getSongUriById(songId: UInt): Uri {
+        return getSongById(songId)?.URI ?: Uri.EMPTY
     }
 
     // пересчет ID треков

@@ -3,40 +3,71 @@ package com.softwareforpeople.lmplayer.model.play
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
+import com.softwareforpeople.lmplayer.data.Song
 import com.softwareforpeople.lmplayer.data.SongManager
 
-class Player(val context: Context) {
+class Player(val context: Context, playList: List<Song>) {
     private val mp = MediaPlayer()
+    private val queue = SongQueue(playList)
     private val songManager = SongManager(context)
 
-    private var currentSongID: UInt = 0U
+    // воспроизведение трека
+    fun play(newSongID: UInt) {
+        val uri = songManager.getSongUriById(newSongID)
 
-    // Получение Uri песни по ID
-    fun getUriByID(songID: UInt): Uri? {
-        val song = songManager.getSongById(songID)
-        return song?.URI
+        stop()
+        mp.setDataSource(context, uri)
+        mp.prepare()
+        mp.start()
     }
 
-    fun play(newSongID: UInt) {
-        mp.stop()
-        mp.reset()
-        currentSongID = newSongID
-
-        val uri = getUriByID(newSongID)
-
-        // Если Uri найден, то начинаем воспроизведение
-        if (uri != null) {
-            try {
-                mp.setDataSource(context, uri)
-                mp.prepare()
-                mp.start()
-            } catch (e: Exception) {
-                // Обработка ошибок, например, если файл не найден
-                e.printStackTrace()
-            }
+    // музыкальная пауза
+    fun pause() {
+        if(mp.isPlaying) {
+            mp.pause()
         } else {
-            // Обработка ситуации, когда Uri не найден
-            println("Uri for song ID $newSongID not found")
+            mp.start()
         }
+    }
+
+    // остановка воспроизведения
+    fun stop() {
+        if(isPlaying()) {
+            mp.stop()
+            mp.reset()
+            mp.release()
+        }
+    }
+
+    // воспроизведение следующего трека
+    fun next() {
+        queue.goNextSong()
+        play(queue.getCurrentSongID())
+    }
+
+    // воспроизведение предыдущего трека
+    fun prev() {
+        queue.goPrevSong()
+        play(queue.getCurrentSongID())
+    }
+
+    //
+    fun getCurrentPosition(): Int {
+        return mp.currentPosition
+    }
+
+    // получить длительность трека
+    fun getDuration(): Int {
+        return mp.duration
+    }
+
+    // перемотка трека
+    fun seekTo(position: Int) {
+        mp.seekTo(position)
+    }
+
+    // проверка на воспроизведение
+    fun isPlaying(): Boolean {
+        return mp.isPlaying
     }
 }
