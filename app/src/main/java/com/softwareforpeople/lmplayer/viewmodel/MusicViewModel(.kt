@@ -1,12 +1,14 @@
 package com.softwareforpeople.lmplayer.viewmodel
 
-class MusicViewModel(private val musicRepository: MusicRepository) : ViewModel() {
+import com.softwareforpeople.lmplayer.data.Song
+
+class MusicViewModel(private val musicRepository: SongManager) : ViewModelFactory{
 
     // LiveData для отслеживания всех треков
-    val allTracks: LiveData<List<Track>> = MutableLiveData(musicRepository.getTracks())
+    val allTracks: LiveData<List<Song>> = MutableLiveData(musicRepository.getTracks())
 
     // LiveData для избранных треков
-    val favoriteTracks: LiveData<List<Track>> = MutableLiveData(musicRepository.getFavoriteTracks())
+    val favoriteTracks: LiveData<List<Song>> = MutableLiveData(musicRepository.getFavoriteTracks())
 
     fun toggleFavorite(trackId: Int) {
         musicRepository.toggleFavorite(trackId)
@@ -14,8 +16,8 @@ class MusicViewModel(private val musicRepository: MusicRepository) : ViewModel()
         (allTracks as MutableLiveData).postValue(musicRepository.getTracks()) // обновляем все треки
     }
 
-    fun addTrack(track: Track) {
-        musicRepository.addTrack(track)
+    fun addTrack(track: Song) {
+        SongManager.addTrack(track)
         (allTracks as MutableLiveData).postValue(musicRepository.getTracks()) // обновляем все треки
     }
 }

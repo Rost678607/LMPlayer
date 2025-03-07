@@ -14,8 +14,8 @@ class SongManager(context: Context) {
     private val songListKey = "songList"
     private val playlist = Playlist("My Playlist", mutableListOf())
 
-    fun toggleFavorite(tracksid: Int) {
-        //val track = playlist.tracks.find { it.ID == 'должно стоять tracksid' }
+    fun toggleFavorite(trackid: Int) {
+        val track = playlist.tracks.find { it.ID == trackid }
          track?.let {it.isFavorite = !it.isFavorite }
         return
     }
