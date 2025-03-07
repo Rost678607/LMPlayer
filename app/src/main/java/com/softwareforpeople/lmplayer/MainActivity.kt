@@ -18,6 +18,25 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val repository = MusicRepository()
+        viewModel = ViewModelProvider(this, ViewModelFactory(repository)).get(MusicViewModel::class.java)
+
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        val adapter = TracksAdapter(emptyList()) { track ->
+            viewModel.toggleFavorite(track.id)
+        }
+        recyclerView.adapter = adapter
+
+        viewModel.allTracks.observe(this) { tracks ->
+            adapter.tracks = tracks
+            adapter.notifyDataSetChanged()
+        }
+
+        // Например, можно добавить тестовые треки
+        val testTrack = Track(1, "Test Track", "Artist", "uri")
+        viewModel.addTrack(testTrack)
+
         enableEdgeToEdge()
 
         permissionManager = PermissionManager(this)

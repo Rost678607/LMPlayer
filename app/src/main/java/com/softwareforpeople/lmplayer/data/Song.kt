@@ -9,5 +9,11 @@ data class Song(
     var URI: Uri,
     val Duration: UInt,
     var Rating: UByte = 60U,
-    var Speed: Float = 1.0F
+    var Speed: Float = 1.0F,
+    var isFavorite: Boolean = false
+)
+
+data class Playlist(
+    val name: String,
+    var tracks: List<Song>
 )

@@ -12,6 +12,18 @@ class SongManager(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("SongData", Context.MODE_PRIVATE)
     private val gson = Gson()
     private val songListKey = "songList"
+    private val playlist = Playlist("My Playlist", mutableListOf())
+
+    fun toggleFavorite(tracksid: Int) {
+        //val track = playlist.tracks.find { it.ID == 'должно стоять tracksid' }
+         track?.let {it.isFavorite = !it.isFavorite }
+        return
+    }
+
+    // Получаем избранные треки
+    fun getFavoriteTracks(): List<Song> {
+        return playlist.tracks.filter { it.isFavorite }
+    }
 
     // загрузка списка треков
     fun loadSongs(): MutableList<Song> {
