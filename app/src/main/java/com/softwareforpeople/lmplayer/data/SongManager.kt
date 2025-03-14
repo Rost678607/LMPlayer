@@ -3,6 +3,8 @@ package com.softwareforpeople.lmplayer.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -24,12 +26,14 @@ class SongManager(context: Context) {
     }
 
     // сохранение списка треков
+    @RequiresApi(Build.VERSION_CODES.GINGERBREAD)
     fun apply(songs: List<Song>) {
         val json = gson.toJson(songs)
         sharedPreferences.edit().putString(songListKey, json).apply()
     }
 
     // добавление трека
+    @RequiresApi(Build.VERSION_CODES.GINGERBREAD)
     fun addSong(song: Song) {
         val songs = loadSongs().toMutableList()
         val newSong = song.copy(ID = getNextAvailableId(songs))
@@ -39,6 +43,7 @@ class SongManager(context: Context) {
     }
 
     // удаление трека
+    @RequiresApi(Build.VERSION_CODES.GINGERBREAD)
     fun removeSong(songId: UInt) {
         val songs = loadSongs().toMutableList()
         songs.removeAll { it.ID == songId }
@@ -71,15 +76,5 @@ class SongManager(context: Context) {
         } else {
             songs.maxOf { it.ID } + 1U
         }
-    }
-
-    // добавления треков в плейлист
-    fun addTrackToPlaylist(playlist: Playlist, track: Track): Playlist {
-        return playlist.copy(tracks = playlist.tracks + track)
-    }
-
-    // удаление трека из плейлиста
-    fun removeTrackFromPlaylist(playlist: Playlist, track: Track): Playlist {
-        return playlist.copy(tracks = playlist.tracks - track)
     }
 }
