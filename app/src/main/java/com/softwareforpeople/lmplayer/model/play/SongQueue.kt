@@ -55,14 +55,18 @@ class SongQueue(val songs: List<Song>) {
         }
     }
 
-    fun deleteSong(songID: UInt) {
-        queue.remove(songID)
+    fun deleteSong(songIndex: Int) {
+        if(currentSongIndex != songIndex) {
+            queue.removeAt(songIndex)
+            if(currentSongIndex > songIndex) {
+                currentSongIndex--
+            }
+        }
     }
 
     // добавление следующего элемента
     fun addNextSong(songID: UInt) {
         queue.add(currentSongIndex + 1, songID)
-
     }
 
     // текущий элемент
