@@ -5,14 +5,23 @@ import android.media.MediaPlayer
 import android.net.Uri
 import com.softwareforpeople.lmplayer.data.Song
 import com.softwareforpeople.lmplayer.data.SongManager
+import com.softwareforpeople.lmplayer.model.play.SongRatingChanger
 
 class Player(val context: Context, playList: List<Song>) {
     private val mp = MediaPlayer()
     private val queue = SongQueue(playList)
+    private val rating = SongRatingChanger(context)
     private val songManager = SongManager(context)
+    private var useRating = true
+
+    init {
+        mp.setOnCompletionListener {
+            next()
+        }
+    }
 
     // воспроизведение трека
-    fun play(newSongID: UInt) {
+    fun play(newSongID: Long) {
         val uri = songManager.getSongUriById(newSongID)
 
         stop()
@@ -41,6 +50,10 @@ class Player(val context: Context, playList: List<Song>) {
 
     // воспроизведение следующего трека
     fun next() {
+        if(useRating) {
+            rating.skipSong(queue.getCurrentSongID(), getDuration(), getCurrentPosition())
+        }
+
         queue.goNextSong()
         play(queue.getCurrentSongID())
     }
@@ -51,7 +64,7 @@ class Player(val context: Context, playList: List<Song>) {
         play(queue.getCurrentSongID())
     }
 
-    //
+    // получить текщее время воспроизведения
     fun getCurrentPosition(): Int {
         return mp.currentPosition
     }
@@ -63,7 +76,16 @@ class Player(val context: Context, playList: List<Song>) {
 
     // перемотка трека
     fun seekTo(position: Int) {
+        if(useRating) {
+            rating.rewindSong(queue.getCurrentSongID(), getDuration(), getCurrentPosition(), position)
+        }
+
         mp.seekTo(position)
+    }
+
+    //
+    fun setUseRating(use: Boolean) {
+        useRating = use
     }
 
     // проверка на воспроизведение

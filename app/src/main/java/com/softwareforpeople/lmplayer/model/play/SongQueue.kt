@@ -4,7 +4,7 @@ import kotlin.random.Random
 import com.softwareforpeople.lmplayer.data.Song
 
 class SongQueue(val songs: List<Song>) {
-    private var queue: MutableList<UInt> = mutableListOf() // список ID песен в очереди
+    private var queue: MutableList<Long> = mutableListOf() // список ID песен в очереди
     private var currentSongIndex: Int = 0 // индекс текущего трека
 
     // составление очереди воспроизведения с нуля
@@ -19,7 +19,7 @@ class SongQueue(val songs: List<Song>) {
 
     // продливание очереди
     private fun continueQueue(useRatings: Boolean) {
-        val finalContinuation: MutableList<UInt> = mutableListOf()
+        val finalContinuation: MutableList<Long> = mutableListOf()
 
         if(useRatings) {
             for (song in songs) {
@@ -35,7 +35,7 @@ class SongQueue(val songs: List<Song>) {
     }
 
     // замена текущего элемента
-    fun changeCurrentSong(newSongID: UInt) {
+    fun changeCurrentSong(newSongID: Long) {
         queue.add(currentSongIndex + 1, newSongID)
     }
 
@@ -65,12 +65,12 @@ class SongQueue(val songs: List<Song>) {
     }
 
     // добавление следующего элемента
-    fun addNextSong(songID: UInt) {
+    fun addNextSong(songID: Long) {
         queue.add(currentSongIndex + 1, songID)
     }
 
     // текущий элемент
-    fun getCurrentSongID(): UInt {
+    fun getCurrentSongID(): Long {
         return queue[currentSongIndex]
     }
 

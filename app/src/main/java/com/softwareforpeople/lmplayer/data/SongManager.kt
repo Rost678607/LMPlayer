@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import androidx.core.content.edit
 
 class SongManager(context: Context) {
 
@@ -12,74 +13,81 @@ class SongManager(context: Context) {
     private val gson = Gson()
     private val songListKey = "songList"
 
-    // загрузка списка треков
-    fun loadSongs(): MutableList<Song> {
-        val json = sharedPreferences.getString(songListKey, null)
-        return if (json != null) {
-            val type = object : TypeToken<MutableList<Song>>() {}.type
-            gson.fromJson(json, type)
-        } else {
-            mutableListOf()
+    // Кэшированный список песен
+    private var cachedSongs: MutableList<Song>? = null
+
+    // Загрузка списка треков
+    fun loadSongs(): List<Song> {
+        if (cachedSongs == null) {
+            val json = sharedPreferences.getString(songListKey, null)
+            cachedSongs = if (json != null) {
+                try {
+                    val type = object : TypeToken<MutableList<Song>>() {}.type
+                    gson.fromJson(json, type)
+                } catch (e: Exception) {
+                    mutableListOf()
+                }
+            } else {
+                mutableListOf()
+            }
         }
+        return cachedSongs!!.toList()
     }
 
-    // сохранение списка треков
-    fun apply(songs: List<Song>) {
+    // Сохранение списка треков
+    private fun saveSongs(songs: List<Song>) {
         val json = gson.toJson(songs)
-        sharedPreferences.edit().putString(songListKey, json).apply()
+        sharedPreferences.edit() { putString(songListKey, json) }
+        cachedSongs = songs.toMutableList()
     }
 
-    // добавление трека
+    // Добавление трека
     fun addSong(song: Song) {
         val songs = loadSongs().toMutableList()
-        val newSong = song.copy(ID = getNextAvailableId(songs))
+        val newId = getNextAvailableId(songs)
+        val newSong = song.copy(ID = newId)
         songs.add(newSong)
-        recalculateIds(songs)
-        apply(songs)
+        saveSongs(songs)
     }
 
-    // удаление трека
-    fun removeSong(songId: UInt) {
+    // Удаление трека
+    fun removeSong(songId: Long) {
         val songs = loadSongs().toMutableList()
         songs.removeAll { it.ID == songId }
-        recalculateIds(songs)
-        apply(songs)
+        saveSongs(songs)
     }
 
-    // получение трека по ID
-    fun getSongById(songId: UInt): Song? {
-        val songs = loadSongs()
-        return songs.find { it.ID == songId }
+    // Получение трека по ID
+    fun getSongById(songId: Long): Song? {
+        return loadSongs().find { it.ID == songId }
     }
 
-    fun getSongUriById(songId: UInt): Uri {
+    // Получение URI трека по ID
+    fun getSongUriById(songId: Long): Uri {
         return getSongById(songId)?.URI ?: Uri.EMPTY
     }
 
-    // пересчет ID треков
-    private fun recalculateIds(songs: MutableList<Song>) {
-        songs.sortBy { it.ID }
-        songs.forEachIndexed { index, song ->
-            song.ID = (index + 1).toUInt()
+    // Получение рейтинга трека по ID
+    fun getSongRatingById(songId: Long): Float {
+        return getSongById(songId)?.Rating ?: 0.0F
+    }
+
+    // Установка рейтинга трека
+    fun setSongRating(songId: Long, rating: Float) {
+        val songs = loadSongs().toMutableList()
+        val song = songs.find { it.ID == songId }
+        if (song != null) {
+            song.Rating = rating
+            saveSongs(songs)
         }
     }
 
-    // получение следующего доступного ID
-    private fun getNextAvailableId(songs: List<Song>): UInt {
+    // Получение следующего доступного ID
+    private fun getNextAvailableId(songs: List<Song>): Long {
         return if (songs.isEmpty()) {
-            1U
+            1L
         } else {
-            songs.maxOf { it.ID } + 1U
+            songs.maxOf { it.ID } + 1L
         }
-    }
-
-    // добавления треков в плейлист
-    fun addTrackToPlaylist(playlist: Playlist, track: Track): Playlist {
-        return playlist.copy(tracks = playlist.tracks + track)
-    }
-
-    // удаление трека из плейлиста
-    fun removeTrackFromPlaylist(playlist: Playlist, track: Track): Playlist {
-        return playlist.copy(tracks = playlist.tracks - track)
     }
 }
