@@ -37,7 +37,7 @@ class SongManager(context: Context) {
     // Сохранение списка треков
     private fun saveSongs(songs: List<Song>) {
         val json = gson.toJson(songs)
-        sharedPreferences.edit() { putString(songListKey, json) }
+        sharedPreferences.edit { putString(songListKey, json) }
         cachedSongs = songs.toMutableList()
     }
 
@@ -78,6 +78,18 @@ class SongManager(context: Context) {
         val song = songs.find { it.ID == songId }
         if (song != null) {
             song.Rating = rating
+            saveSongs(songs)
+        }
+    }
+
+    // Обновление информации о файле трека
+    fun updateSongFileInfo(songId: Long, uri: Uri, fileName: String, filePath: String) {
+        val songs = loadSongs().toMutableList()
+        val song = songs.find { it.ID == songId }
+        if (song != null) {
+            song.URI = uri
+            song.FileName = fileName
+            song.FilePath = filePath
             saveSongs(songs)
         }
     }

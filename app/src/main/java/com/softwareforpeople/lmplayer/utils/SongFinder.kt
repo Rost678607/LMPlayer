@@ -9,12 +9,12 @@ class SongFinder(val context: Context) {
     val songManager = SongManager(context)
 
     fun findLostSong(song: Song): Uri? {
-        val allFiles = songManager.getAllAudioFiles()
+        val allFiles = songManager.loadSongs()
 
         val candidates = allFiles.filter { // первичная фильтрация
-            it.fileSize == song.FileSize &&
-                    it.fileType == song.FileType &&
-                    it.duration == song.Duration
+            it.FileSize == song.FileSize &&
+                    it.FileType == song.FileType &&
+                    it.Duration == song.Duration
         }
 
         when {
@@ -29,7 +29,7 @@ class SongFinder(val context: Context) {
             }
             else -> {
                 // Пытаемся сузить по имени файла
-                val nameMatches = candidates.filter { it.fileName == song.FileName }
+                val nameMatches = candidates.filter { it.FileName == song.FileName }
                 when {
                     nameMatches.size == 1 -> {
                         val found = nameMatches[0]
@@ -38,7 +38,7 @@ class SongFinder(val context: Context) {
                     }
                     nameMatches.size > 1 -> {
                         // Если несколько совпадений по имени, пробуем по пути
-                        val pathMatches = nameMatches.filter { it.filePath == song.FilePath }
+                        val pathMatches = nameMatches.filter { it.FilePath == song.FilePath }
                         when {
                             pathMatches.size == 1 -> {
                                 val found = pathMatches[0]
@@ -57,7 +57,7 @@ class SongFinder(val context: Context) {
                     }
                     else -> {
                         // Если по имени ничего не найдено, пробуем по пути
-                        val pathMatches = candidates.filter { it.filePath == song.FilePath }
+                        val pathMatches = candidates.filter { it.FilePath == song.FilePath }
                         when {
                             pathMatches.size == 1 -> {
                                 val found = pathMatches[0]
@@ -85,12 +85,12 @@ class SongFinder(val context: Context) {
     }
 
     // найдено много чего
-    private fun onMultipleSongsFound(song: Song, candidates: List<AudioFile>) {
+    private fun onMultipleSongsFound(song: Song, candidates: List<Song>) {
         // Пустой обработчик, как указано в задании
     }
 
     // обновление записи о треке
-    private fun updateSongManager(song: Song, found: AudioFile) {
-        songManager.updateSongFileInfo(song.ID, found.URI, found.fileName, found.filePath)
+    private fun updateSongManager(song: Song, found: Song) {
+        songManager.updateSongFileInfo(song.ID, found.URI, found.FileName, found.FilePath)
     }
 }
