@@ -2,7 +2,6 @@ package com.softwareforpeople.lmplayer.data
 
 import android.content.Context
 import android.net.Uri
-import com.softwareforpeople.lmplayer.data.Song
 import com.softwareforpeople.lmplayer.data.SongManager
 
 class SongFinder(val context: Context) {

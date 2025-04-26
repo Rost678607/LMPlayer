@@ -1,6 +1,8 @@
 package com.softwareforpeople.lmplayer.data
 
-class PlaykistManager{
+import com.softwareforpeople.lmplayer.data.`class`.Playlist
+
+class PlaylistManager{
     val myPlaylist = Playlist("Мой плейлист", listOf())
     val newTrack = Song(
         ID = TODO(),

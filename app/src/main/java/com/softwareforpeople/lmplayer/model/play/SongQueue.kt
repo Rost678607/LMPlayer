@@ -1,7 +1,7 @@
 package com.softwareforpeople.lmplayer.model.play
 
-import kotlin.random.Random
 import com.softwareforpeople.lmplayer.data.Song
+import kotlin.random.Random
 
 class SongQueue(val songs: List<Song>) {
     private var queue: MutableList<Long> = mutableListOf() // список ID песен в очереди
