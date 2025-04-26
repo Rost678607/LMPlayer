@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.softwareforpeople.lmplayer.ui.screens.ListScreen
+import com.softwareforpeople.lmplayer.ui.MainList
 import com.softwareforpeople.lmplayer.utils.PermissionManager
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .safeDrawingPadding()
                 ) {
-                    ListScreen()
+                    MainList()
                 }
             }
         }

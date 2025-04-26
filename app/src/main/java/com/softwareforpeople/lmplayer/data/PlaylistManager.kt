@@ -1,3 +1,4 @@
+/*
 package com.softwareforpeople.lmplayer.data
 
 import com.softwareforpeople.lmplayer.data.`class`.Playlist
@@ -14,14 +15,14 @@ class PlaylistManager{
         Speed = TODO(),
         isFavorite = TODO()
     )
-    
+
 
     // Добавление трека в плейлист
     val updatedPlaylist = addPlaylist(myPlaylist, newTrack)
 
     // Переключение избранного
     val favoriteTrack = toggleFavorite(newTrack)
-    
+
     fun addPlaylist(playlist: Playlist, song: Song): Playlist {
         return playlist.copy(tracks = (playlist.tracks + song))
     }
@@ -29,7 +30,7 @@ class PlaylistManager{
     fun removePlaylist(playlist: Playlist, song: Song): Playlist {
         return playlist.copy(tracks = (playlist.tracks - song))
     }
-    
+
     fun toggleFavorite(song: Song): Song {
         song.isFavorite = !song.isFavorite
         return song
@@ -37,5 +38,6 @@ class PlaylistManager{
     fun getFavoriteTracks(playlist: Playlist): List<Song> {
         return playlist.tracks.filter { it.isFavorite }
     }
-    
+
 }
+*/
